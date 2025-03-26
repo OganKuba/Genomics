@@ -1,4 +1,8 @@
-from convert.converter import chia_pet_anchors_to_bedtool, bed_df_to_bedtool, find_loops_with_peak
+from convert.converter import (
+    chia_pet_anchors_to_pyranges,
+    bed_df_to_pyranges,
+    find_loops_with_peak
+)
 from data.data_loader import load_bedpe, load_bed
 from save_data.save_data import annotate_and_save_results
 from visualize.plot_loop import plot_loop_categories
@@ -19,20 +23,18 @@ def process_chia_pet(chia_file, ctcf_file, rad21_file, start=None, stop=None,
     #Index Reset
     chia_pet_df.reset_index(drop=True, inplace=True)
 
-    #Convert the data to BedTool objects
-    anchor1_bedtool = chia_pet_anchors_to_bedtool(chia_pet_df, anchor=1)
-    anchor2_bedtool = chia_pet_anchors_to_bedtool(chia_pet_df, anchor=2)
+    #Convert the data to PyRanges objects
+    anchor1_pyr = chia_pet_anchors_to_pyranges(chia_pet_df, anchor=1)
+    anchor2_pyr = chia_pet_anchors_to_pyranges(chia_pet_df, anchor=2)
 
-    #Convert the data to BedTool objects
-    ctcf_bedtool = bed_df_to_bedtool(ctcf_df)
-    rad21_bedtool = bed_df_to_bedtool(rad21_df)
+    #Convert the data to PyRanges objects
+    ctcf_pyr = bed_df_to_pyranges(ctcf_df)
+    rad21_pyr = bed_df_to_pyranges(rad21_df)
 
-
-    ctcf_anchor1 = find_loops_with_peak(anchor1_bedtool, ctcf_bedtool)
-    ctcf_anchor2 = find_loops_with_peak(anchor2_bedtool, ctcf_bedtool)
-
-    rad21_anchor1 = find_loops_with_peak(anchor1_bedtool, rad21_bedtool)
-    rad21_anchor2 = find_loops_with_peak(anchor2_bedtool, rad21_bedtool)
+    ctcf_anchor1 = find_loops_with_peak(anchor1_pyr, ctcf_pyr)
+    ctcf_anchor2 = find_loops_with_peak(anchor2_pyr, ctcf_pyr)
+    rad21_anchor1 = find_loops_with_peak(anchor1_pyr, rad21_pyr)
+    rad21_anchor2 = find_loops_with_peak(anchor2_pyr, rad21_pyr)
 
     all_loops = set(chia_pet_df.index)
 
